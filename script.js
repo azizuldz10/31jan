@@ -8,6 +8,11 @@ function playMusic() {
     if (!isPlaying) {
         bgMusic.play().catch(err => console.log('Audio play failed:', err));
         isPlaying = true;
+        // Hide the click hint after music starts
+        const clickHint = document.querySelector('.click-hint');
+        if (clickHint) {
+            clickHint.classList.add('hide');
+        }
     }
 }
 
@@ -50,7 +55,7 @@ function startTypingAnimation() {
     });
 }
 
-// Update fungsi nextSection untuk memulai animasi ketika masuk ke section motivasi
+// Update fungsi nextSection untuk menginisialisasi slideshow di section galeri
 function nextSection() {
     if (currentSection < sections.length - 1) {
         sections[currentSection].classList.remove('active');
@@ -120,6 +125,30 @@ document.addEventListener('keydown', function(e) {
 // Animasi text saat halaman dimuat
 document.addEventListener('DOMContentLoaded', function() {
     sections[0].classList.add('active');
+    
+    // Tambahkan gambar tambahan untuk setiap gallery item
+    const galleryItems = document.querySelectorAll('.gallery-item');
+    galleryItems.forEach((item, index) => {
+        const img = item.querySelector('img');
+        const src = img.src;
+        const variations = [
+            src,
+            src.replace('.jpeg', '_2.jpeg'),
+            src.replace('.jpeg', '_3.jpeg')
+        ];
+        
+        const slideshow = document.createElement('div');
+        slideshow.className = 'slideshow';
+        
+        variations.forEach(imgSrc => {
+            const newImg = document.createElement('img');
+            newImg.src = imgSrc;
+            newImg.alt = `Kenangan ${index + 1}`;
+            slideshow.appendChild(newImg);
+        });
+        
+        img.parentNode.replaceChild(slideshow, img);
+    });
 });
 
 // Simpan posisi musik setiap 1 detik
